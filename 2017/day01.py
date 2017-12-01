@@ -27,36 +27,57 @@ For example:
     next one is the last digit, 9.
 
 What is the solution to your captcha?
+
+--- Part Two ---
+
+You notice a progress bar that jumps to 50% completion.
+Apparently, the door isn't yet satisfied, but it did emit a star
+as encouragement. The instructions change:
+
+Now, instead of considering the next digit, it wants you to
+consider the digit halfway around the circular list. That is, if
+your list contains 10 items, only include a digit in your sum if
+the digit 10/2 = 5 steps forward matches it. Fortunately, your
+list has an even number of elements.
+
+For example:
+
+ - 1212 produces 6: the list contains 4 items, and all four digits
+   match the digit 2 items ahead.
+ - 1221 produces 0, because every comparison is between a 1 and a 2.
+ - 123425 produces 4, because both 2s match each other, but no other
+   digit has a match.
+ - 123123 produces 12.
+ - 12131415 produces 4.
+
+What is the solution to your new captcha?
 """
 
 import os
 from typing import Iterable, Iterator
 
 
-def chunk(l: Iterable) -> Iterator:
-    """Associate each item with its nearest neighbor to the right (wrapping).
+def chunk(l: Iterable, n: int) -> Iterator:
+    """Associate each item with its `n`th neighbor to the right (wrapping).
 
-    Example:
-      >>> list(chunk('123'))
-      [('1', '2'), ('2', '3'), ('3', '1')]
+    >>> list(chunk('123', n=1))
+    [('1', '2'), ('2', '3'), ('3', '1')]
     """
     c = len(l)
-    return ((l[i], l[(i + 1) % c]) for i in range(c))
+    return ((l[i], l[(i + n) % c]) for i in range(c))
 
 
-def solve(digits: Iterable) -> int:
+def solve(digits: Iterable, places: int = 1) -> int:
     """Solve the CAPTCHA.
 
     >>> solve('1122')
     3
-    >>> solve('1111')
-    4
     >>> solve('1234')
     0
-    >>> solve('91212129')
-    9
+    >>> solve('123425', places=3)
+    4
     """
-    return sum(int(a) for a, b in chunk(digits) if a == b)
+    return sum(int(a) for a, b in chunk(digits, places) if a == b)
 
 
 if __name__ == '__main__':
@@ -66,4 +87,5 @@ if __name__ == '__main__':
     path = os.path.dirname(__file__)
     with open(os.path.join(path, 'day01.txt')) as f:
         digits = f.read().strip()
-        print(solve(digits))
+        print(solve(digits))  # part 1
+        print(solve(digits, len(digits) // 2))  # part 2
