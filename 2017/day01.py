@@ -53,8 +53,9 @@ For example:
 What is the solution to your new captcha?
 """
 
-import os
 from typing import Iterable, Iterator
+
+from utils import puzzle_input
 
 
 def chunk(l: Iterable, n: int) -> Iterator:
@@ -84,8 +85,7 @@ if __name__ == '__main__':
     import doctest
     doctest.testmod()
 
-    path = os.path.dirname(__file__)
-    with open(os.path.join(path, 'day01.txt')) as f:
+    with puzzle_input(1) as f:
         digits = f.read().strip()
         print(solve(digits))  # part 1
         print(solve(digits, len(digits) // 2))  # part 2
