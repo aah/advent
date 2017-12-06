@@ -26,6 +26,6 @@ def nth(i: Iterator, n: int) -> Any:
 def puzzle_input(day):
     path = os.path.dirname(__file__)
     day = str(day).rjust(2, '0')
-    f = os.path.join(path, f'day{day}.txt')
+    f = os.path.join(path, f'input/day{day}.txt')
     with open(f, 'r') as f:
         yield f
