@@ -68,23 +68,25 @@ How many cycles are in the infinite loop that arises from the
 configuration in your puzzle input?
 """
 
+from itertools import count
+
 from utils import puzzle_input
 
 
-def count_cycles(banks: list) -> int:
+def count_cycles(banks: list) -> tuple:
     """Count the redistributions needed to produce a previously seen config.
 
     >>> count_cycles([0, 2, 7, 0])
-    5
+    (5, 4)
     """
-    seen = set()
-    while True:
+    seen = {}
+    for i in count():
         distribute(banks, banks.index(max(banks)))
         state = tuple(banks)
         if state in seen:
             break
-        seen.add(state)
-    return len(seen) + 1
+        seen[state] = i
+    return (i + 1, i - seen[state])
 
 
 def distribute(banks: list, index: int):
